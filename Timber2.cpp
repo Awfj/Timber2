@@ -23,6 +23,12 @@ int main()
     spriteTree.setTexture(textureTree);
     spriteTree.setPosition(810, 0);
 
+    Texture texturePlayer;
+    Sprite spritePlayer;
+    texturePlayer.loadFromFile("graphics/player.png");
+    spritePlayer.setTexture(texturePlayer);
+    spritePlayer.setPosition(580, 720);
+
     while (window.isOpen()) {
         if (Keyboard::isKeyPressed(Keyboard::Escape)) {
             window.close();
@@ -31,6 +37,7 @@ int main()
         window.clear();
         window.draw(spriteBackground);
         window.draw(spriteTree);
+        window.draw(spritePlayer);
         window.display();
     }
 
