@@ -6,6 +6,8 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
+enum class side { LEFT, RIGHT, NONE };
+
 int main()
 {
     VideoMode vm(1920, 1080);
@@ -28,16 +30,108 @@ int main()
     texturePlayer.loadFromFile("graphics/player.png");
     spritePlayer.setTexture(texturePlayer);
     spritePlayer.setPosition(580, 720);
+    side playerSide = side::LEFT;
+
+    Texture textureAxe;
+    textureAxe.loadFromFile("graphics/axe.png");
+    Sprite spriteAxe;
+    spriteAxe.setTexture(textureAxe);
+
+    const float AXE_POSITIONI_LEFT = 700;
+    const float AXE_POSITION_RIGHT = 1075;
+    spriteAxe.setPosition(AXE_POSITIONI_LEFT, 830);
+
+    
+    
+
+    Font font;
+    font.loadFromFile("fonts/KOMIKAP_.ttf");
+
+    Text messageText;
+    messageText.setFont(font);
+    messageText.setString("Press Enter to start!");
+    messageText.setCharacterSize(75);
+    messageText.setFillColor(Color::White);
+
+    FloatRect textRect = messageText.getLocalBounds();
+    messageText.setOrigin(textRect.left +
+        textRect.width / 2.0f,
+        textRect.top +
+        textRect.height / 2.0f);
+    messageText.setPosition(1920 / 2.0f, 1080 / 2.0f);
+
+    Text scoreText;
+    scoreText.setFont(font);
+    scoreText.setString("Score = 0");
+    scoreText.setCharacterSize(100);
+    scoreText.setFillColor(Color::White);
+    scoreText.setPosition(20, 20);
+
+    bool acceptInput = false;
+    bool paused = true;
 
     while (window.isOpen()) {
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::KeyReleased && !paused) {
+                acceptInput = true;
+                spriteAxe.setPosition(2000,
+                    spriteAxe.getPosition().y);
+            }
+        }
+
         if (Keyboard::isKeyPressed(Keyboard::Escape)) {
             window.close();
         }
 
+        /*if (Keyboard::isKeyPressed(Keyboard::Return) ||
+            Keyboard::isKeyPressed(Keyboard::Space)) {
+            if (paused) {
+                paused = false;
+                acceptInput = true;
+            }
+            else {
+                paused = true;
+                acceptInput = false;
+            }   
+        }*/
+
+        if (Keyboard::isKeyPressed(Keyboard::Return)) {
+            paused = false;
+            acceptInput = true;
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Space)) {
+            paused = true;
+            acceptInput = false;
+        }
+
+        if (acceptInput) {
+            if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                playerSide = side::RIGHT;
+                spritePlayer.setPosition(1200, 720);
+            }
+            else if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                playerSide = side::LEFT;
+                spritePlayer.setPosition(580, 720);
+            }
+        }
+
         window.clear();
+
+        if (!paused) {
+
+        }
+
         window.draw(spriteBackground);
         window.draw(spriteTree);
+        window.draw(spriteAxe);
         window.draw(spritePlayer);
+        window.draw(scoreText);
+
+        if (paused) {
+            window.draw(messageText);
+        }
+
         window.display();
     }
 
