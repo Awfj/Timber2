@@ -8,6 +8,9 @@ using namespace sf;
 
 enum class side { LEFT, RIGHT, NONE };
 
+const int NUM_BRANCHES = 6;
+side branchPositions[NUM_BRANCHES];
+
 int main()
 {
     VideoMode vm(1920, 1080);
@@ -69,6 +72,7 @@ int main()
 
     bool acceptInput = false;
     bool paused = true;
+    int score = 0;
 
     while (window.isOpen()) {
         Event event;
@@ -136,6 +140,26 @@ int main()
     }
 
     return 0;
+}
+
+void updateBranches(int seed) {
+    for (int i = NUM_BRANCHES - 1; i > 0; i--) {
+        branchPositions[i] = branchPositions[i - 1];
+    }
+
+    srand((int)time(0) + seed);
+    int r = (rand() % 5);
+
+    switch (r) {
+    case 0:
+        branchPositions[0] = side::LEFT;
+        break;
+    case 1:
+        branchPositions[0] = side::RIGHT;
+        break;
+    default:
+        branchPositions[0] = side::NONE;
+    }
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
