@@ -2,7 +2,7 @@
 //
 
 //#include <iostream>
-//#include <sstream>
+#include <sstream>
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
@@ -70,6 +70,18 @@ int main()
     scoreText.setFillColor(Color::White);
     scoreText.setPosition(20, 20);
 
+    Clock clock;
+    RectangleShape timeBar;
+    float timeBarStartWidth = 400;
+    float timeBarHeight = 80;
+    timeBar.setSize(Vector2f(timeBarStartWidth, timeBarHeight));
+    timeBar.setFillColor(Color::Red);
+    timeBar.setPosition((1920 / 2) - timeBarStartWidth / 2, 900);
+
+    Time gameTimeTotal;
+    float timeRemaining = 6.0f;
+    float timeBarWidthPerSecond = timeBarStartWidth / timeRemaining;
+
     bool acceptInput = false;
     bool paused = true;
     int score = 0;
@@ -112,10 +124,12 @@ int main()
         if (acceptInput) {
             if (Keyboard::isKeyPressed(Keyboard::Right)) {
                 playerSide = side::RIGHT;
+                score++;
                 spritePlayer.setPosition(1200, 720);
             }
             else if (Keyboard::isKeyPressed(Keyboard::Left)) {
                 playerSide = side::LEFT;
+                score++;
                 spritePlayer.setPosition(580, 720);
             }
         }
@@ -123,10 +137,15 @@ int main()
         window.clear();
 
         if (!paused) {
-
+            std::stringstream ss;
+            ss << "Score = " << score;
+            scoreText.setString(ss.str());
         }
 
         window.draw(spriteBackground);
+        /*for (int i = 0; i < NUM_BRANCHES; i++) {
+            window.draw(branches[i]);
+        }*/
         window.draw(spriteTree);
         window.draw(spriteAxe);
         window.draw(spritePlayer);
